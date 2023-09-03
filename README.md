@@ -1,1 +1,1 @@
-# pygames
+Most of the code in this repository was written following tutorials from "The Art of Doing" pygame course. I find game creation interesting, while I know python and pygame isn't really the most optimal game creation language and framework, I still want to learn more about OOP and core concepts needed for coding up games. 
