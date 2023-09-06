@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 import math
+import time
 
 pygame.init()
 
@@ -22,10 +23,8 @@ lives = STARTINGLIVES
 clownvel = STARTINGVEL
 clowndx = random.choice([-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
 clowndy = random.choice([-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-balanceby = math.sqrt(math.sqrt(2)/(abs(clowndx)**2+abs(clowndy)**2))
-clowndx = clowndx * balanceby
-clowndy = clowndy * balanceby
 
+balanceby = math.sqrt(math.sqrt(2)/(abs(clowndx)**2+abs(clowndy)**2))
 
 
 BLUE = (1,175,209)
@@ -69,6 +68,7 @@ clownrect.center = (WINDOWW//2,WINDOWH//2)
 
 running = True
 pygame.mixer.music.play(-1,0.0)
+prevtime = pygame.time.get_ticks()
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -77,6 +77,10 @@ while running:
             mousex = event.pos[0]
             mousey = event.pos[1]
             if clownrect.collidepoint(mousex,mousey):
+                currenttime = pygame.time.get_ticks()
+                prevtime = currenttime
+                timer = (currenttime - prevtime) / 1000.0
+                print(math.sqrt((clownrect.x)**2 + (clownrect.y)**2)/timer)
                 score += 1
                 clicksound.play()
                 clownvel += CLOWNACC
@@ -86,16 +90,13 @@ while running:
                     clowndx = random.choice ([-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
                     clowndy = random.choice ([-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
                     balanceby = math.sqrt(math.sqrt(2)/(abs(clowndx)**2+abs(clowndy)**2))
-                    clowndx = clowndx * balanceby
-                    clowndy = clowndy * balanceby
             else:
                 lives -= 1
                 misssound.play()
 
 
-    clownrect.x +=  clowndx*clownvel
-    clownrect.y +=  clowndy*clownvel
-    print(math.sqrt((clowndy)**2 + (clowndx)**2))
+    clownrect.x +=  clowndx*clownvel*balanceby
+    clownrect.y +=  clowndy*clownvel*balanceby
 
     if clownrect.left <= 0 or clownrect.right >= WINDOWW:
         clowndx = -1*clowndx
@@ -121,8 +122,6 @@ while running:
                     clowndx = random.choice ([-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
                     clowndy = random.choice ([-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
                     balanceby = math.sqrt(math.sqrt(2)/(abs(clowndx)**2+abs(clowndy)**2))
-                    clowndx = clowndx * balanceby
-                    clowndy = clowndy * balanceby
                     pygame.mixer.music.play(-1,0.0)
                     paused = False
                 if event.type == pygame.QUIT:

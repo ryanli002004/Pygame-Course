@@ -12,7 +12,7 @@ pygame.display.set_caption("Feed the Dragon")
 FPS = 60
 clock = pygame.time.Clock()
 
-STARTING_LIVES = 1
+STARTING_LIVES = 5
 PLAYER_VEL = 10
 COIN_VEL = 10
 COIN_ACC = 1
