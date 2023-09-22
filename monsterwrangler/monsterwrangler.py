@@ -80,18 +80,31 @@ class Player(pygame.sprite.Sprite):
 
 class Monster(pygame.sprite.Sprite):
 
-    def __init__(self):
-        pass
+    def __init__(self, x, y, image, monsterType):
+        super().__init__()
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x,y)
+        self.type = monsterType
+        self.dx = random.choice([-1,1])
+        self.dy = random.choice([-1,1])
+        self.velocity = random.randint(1,5)
 
     def update(self):
-        pass
+        self.rect.x += self.dx * self.velocity
+        self.rect.y += self.dy * self.velocity
+        if self.rect.left <= 0 or self.rect.right >= WINDOWW:
+            self.dx = -1*self.dx
+        if self.rect.top <= 0 or self.rect.bottom >= WINDOWH:
+            self.dy = -1*self.dy
 
 myplayergroup = pygame.sprite.Group()
 myplayer = Player()
 myplayergroup.add(myplayer)
 
 mymonstergroup = pygame.sprite.Group()
-
+testMonster = Monster(500,500,pygame.image.load(os.path.join("monsterwrangler","green_monster.png")),1)
+mymonstergroup.add(testMonster)
 mygame = Game()
 
 running = True
