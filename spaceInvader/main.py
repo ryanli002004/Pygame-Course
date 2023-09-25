@@ -79,7 +79,16 @@ class Game():
                 self.checkGameStatus("Aliens breached the line","press 'enter' to continue")
 
     def checkCollisions(self):
-        pass
+        if pygame.sprite.groupcollide(self.playerBulletGroup,self.alienGroup, True, True):
+            self.alienHitSound.play()
+            self.score += 100
+
+        if pygame.sprite.spritecollide(self.player,self.alienBulletGroup,True):
+            self.player.lives -=1
+            self.playerHitSound.play()
+            self.checkGameStatus("You've been hit","press 'enter' to continue")
+
+
 
     def StartNewRound(self):
         for i in range(11):
@@ -91,7 +100,11 @@ class Game():
         self.pauseGame("space invaders round: "+str(self.roundNumber), "press 'enter' to begin")
 
     def checkRoundCompletion(self):
-        pass
+        if not (self.alienGroup):
+            self.roundNumber+=1
+            self.score +=1000*self.roundNumber
+            self.StartNewRound()
+
 
     def checkGameStatus(self, mainText, subText):
         self.alienBulletGroup.empty()
@@ -132,7 +145,16 @@ class Game():
                     running = False
 
     def resetGame(self):
-        pass
+        self.pauseGame("Final Score: "+ str(self.score),"press 'enter' to play again")
+        self.score = 0
+        self.roundNumber = 1
+        self.player.lives = 5
+        self.alienGroup.empty()
+        self.alienBulletGroup.empty()
+        self.playerBulletGroup.empty()
+
+        self.StartNewRound()
+
 
 
 class Player(pygame.sprite.Sprite):
