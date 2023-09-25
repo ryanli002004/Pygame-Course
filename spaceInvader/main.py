@@ -76,7 +76,7 @@ class Game():
             if breach:
                 self.breachSound.play()
                 self.player.lives -=1
-                self.checkGameStatus()
+                self.checkGameStatus("Aliens breached the line","press 'enter' to continue")
 
     def checkCollisions(self):
         pass
@@ -88,16 +88,48 @@ class Game():
                 self.alienGroup.add(alien)
 
         self.newRoundSound.play()
-        self.pauseGame()
+        self.pauseGame("space invaders round: "+str(self.roundNumber), "press 'enter' to begin")
 
     def checkRoundCompletion(self):
         pass
 
-    def checkGameStatus(self):
-        pass
+    def checkGameStatus(self, mainText, subText):
+        self.alienBulletGroup.empty()
+        self.playerBulletGroup.empty()
+        self.player.reset()
+        for alien in self.alienGroup:
+            alien.reset()
 
-    def pauseGame(self):
-        pass
+        if self.player.lives <= 0:
+            self.resetGame()
+        else:
+            self.pauseGame(mainText,subText)
+
+    def pauseGame(self, mainText, subText):
+        WHITE = (255,255,255)
+        BLACK = (0,0,0)
+        mainText = self.font.render(mainText, True, WHITE)
+        mainRect = mainText.get_rect()
+        mainRect.center = (WINDOWW//2,WINDOWH//2)
+        subText = self.font.render(subText, True, WHITE)
+        subRect = subText.get_rect()
+        subRect.center = (WINDOWW//2,WINDOWH//2+64)
+
+        window.fill(BLACK)
+        window.blit(mainText,mainRect)
+        window.blit(subText,subRect)
+        pygame.display.update()
+
+        global running
+        paused = True
+        while paused:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        paused = False
+                if event.type == pygame.QUIT:
+                    paused = False
+                    running = False
 
     def resetGame(self):
         pass
