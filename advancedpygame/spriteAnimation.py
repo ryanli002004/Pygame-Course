@@ -39,7 +39,33 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self,x,y,grassTiles,waterTiles):
         super().__init__()
-        self.image = pygame.image.load(os.path.join("advancedpygame","knight.png"))
+        self.moveRightSprites = []
+        self.moveLeftSprites = []
+        self.idleRightSprites = []
+        self.idleLeftSprites = []
+
+        self.moveRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Run (1).png")),(64,64)))
+        self.moveRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Run (2).png")),(64,64)))
+        self.moveRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Run (3).png")),(64,64)))
+        self.moveRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Run (4).png")),(64,64)))
+        self.moveRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Run (5).png")),(64,64)))
+        self.moveRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Run (6).png")),(64,64)))
+        self.moveRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Run (7).png")),(64,64)))
+        self.moveRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Run (8).png")),(64,64)))
+
+        self.idleRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Idle (1).png")),(64,64)))
+        self.idleRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Idle (2).png")),(64,64)))
+        self.idleRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Idle (3).png")),(64,64)))
+        self.idleRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Idle (4).png")),(64,64)))
+        self.idleRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Idle (5).png")),(64,64)))
+        self.idleRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Idle (6).png")),(64,64)))
+        self.idleRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Idle (7).png")),(64,64)))
+        self.idleRightSprites.append(pygame.transform.scale(pygame.image.load(os.path.join("advancedpygame","boy","Idle (8).png")),(64,64)))
+
+
+        self.currentSprite = 0
+
+        self.image = self.moveRightSprites[self.currentSprite]
         self.rect = self.image.get_rect()
         self.rect.bottomleft = (x,y)
 
@@ -58,6 +84,14 @@ class Player(pygame.sprite.Sprite):
         self.VACCL = 0.5
         self.VJUMPS = 15
 
+    def animate(self, spriteList,speed):
+        if self.currentSprite < len(spriteList) -1:
+            self.currentSprite+=speed
+        else: 
+            self.currentSprite = 0
+            
+        self.image = spriteList[int(self.currentSprite)]
+
     def update(self):
         self.move()
         self.checkCollisions()
@@ -67,8 +101,11 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self.acceleration.x = -1*self.HACCL
-        if keys[pygame.K_d]:
+        elif keys[pygame.K_d]:
             self.acceleration.x = self.HACCL
+            self.animate(self.moveRightSprites, .5)
+        else:
+            self.animate(self.idleRightSprites,.5)
 
         self.acceleration.x -= self.velocity.x*self.HFRIC
         self.velocity += self.acceleration
