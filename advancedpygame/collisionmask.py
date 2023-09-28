@@ -27,6 +27,7 @@ class Tile(pygame.sprite.Sprite):
             self.image = pygame.image.load(os.path.join("advancedpygame","dirt.png"))
         elif imageInt == 2:
             self.image = pygame.image.load(os.path.join("advancedpygame","grass.png"))
+            self.mask = pygame.mask.from_surface(self.image)
             subGroup.add(self)
         elif imageInt ==3:
             self.image = pygame.image.load(os.path.join("advancedpygame","water.png"))
@@ -34,6 +35,10 @@ class Tile(pygame.sprite.Sprite):
         mainGroup.add(self)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x,y)
+
+    def update(self):
+        pygame.draw.rect(window,(0,0,255),self.rect)
+
 
 class Player(pygame.sprite.Sprite):
 
@@ -98,6 +103,7 @@ class Player(pygame.sprite.Sprite):
         self.image = spriteList[int(self.currentSprite)]
 
     def update(self):
+        self.mask = pygame.mask.from_surface(self.image)
         self.move()
         self.checkCollisions()
     
@@ -129,10 +135,10 @@ class Player(pygame.sprite.Sprite):
 
     def checkCollisions(self):
         
-        collidedPlatforms = pygame.sprite.spritecollide(self,self.grassTiles,False) 
+        collidedPlatforms = pygame.sprite.spritecollide(self,self.grassTiles,False,pygame.sprite.collide_mask) 
         if collidedPlatforms:
             if self.velocity.y > 0:
-                self.position.y = collidedPlatforms[0].rect.top+1
+                self.position.y = collidedPlatforms[0].rect.top+8
                 self.velocity.y = 0
 
         if pygame.sprite.spritecollide(self, self.waterTiles, False):
